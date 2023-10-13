@@ -5,7 +5,7 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/thorpejosh/ssh-agent-docker)](https://hub.docker.com/r/thorpejosh/ssh-agent-docker)
 ![Docker Pulls](https://img.shields.io/badge/architecture-amd64-blue)
 ![Docker Pulls](https://img.shields.io/badge/architecture-arm64-blue)
-
+[![Image Size](https://img.shields.io/docker/image-size/thorpejosh/ssh-agent-docker)](https://hub.docker.com/r/thorpejosh/ssh-agent-docker)
 
 Simply the official [Jenkins SSH agent](https://hub.docker.com/r/jenkins/ssh-agent) with the docker cli binary from the official [docker image](https://hub.docker.com/_/docker) baked into it.
 
