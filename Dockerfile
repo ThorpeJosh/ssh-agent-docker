@@ -1,4 +1,4 @@
-FROM jenkins/ssh-agent:5.17.0@sha256:95684dc3a96d0513dc29e631f6ed28f947f828109ed975d8d769eded37fa8268
+FROM jenkins/ssh-agent:5.18.0@sha256:91ccf313230cd9fe003de5dd3682ae767c8e2afff7ae5b52d47312da6a0d7b1b
 # Copy the docker binary from the official docker image
 COPY --from=docker:24.0.7-cli@sha256:43651800218f833f6d09f586df8b174866a31b38e905ef1721658243cbe460a5 /usr/local/bin/docker /usr/local/bin/docker
 
