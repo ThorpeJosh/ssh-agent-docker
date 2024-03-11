@@ -1,10 +1,17 @@
 ---
-name: Publish Docker Image
+name: Publish Image
 
 on:
-  push:
-    tags:
-      - '*'
+  release:
+    types: [published]
+  workflow_run:
+    workflows: ["Publish Github Release"]
+    types:
+      - completed
+    branches:
+      - main
+    conclusions:
+      - success
 
 env:
   IMAGE_NAME: ${{ github.repository }}

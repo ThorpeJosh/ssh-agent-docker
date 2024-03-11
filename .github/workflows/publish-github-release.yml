@@ -1,0 +1,57 @@
+---
+name: Publish Github Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Dockerfile'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract Jenkins ssh-agent version
+        id: jenkins_version
+        run: |
+          VERSION=$(grep 'FROM jenkins/ssh-agent:' Dockerfile | \
+            sed -n 's/FROM jenkins\/ssh-agent:\(.*\)@sha256.*/\1/p')
+          echo "Extracted VERSION=${VERSION}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Check if release already exists
+        id: check_release
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: releases } = await github.rest.repos.listReleases({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            });
+            const exists = releases.some(release => release.tag_name === process.env.VERSION);
+            console.log(`Release exists: ${exists}`);
+            if (exists) {
+              core.setOutput('exists', 'true');
+            } else {
+              core.setOutput('exists', 'false');
+            }
+        env:
+          VERSION: ${{ env.VERSION }}
+
+      - name: Create release
+        if: steps.check_release.outputs.exists == 'false' && env.VERSION != ''
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.VERSION }}
+          generate_release_notes: true
+          make_latest: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
