@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
+        with:
+          ssh-key: "${{secrets.SSH_KEY}}"
 
       - name: Extract Jenkins ssh-agent version
         id: jenkins_version
@@ -43,6 +45,14 @@ jobs:
             }
         env:
           VERSION: ${{ env.VERSION }}
+
+      - name: Push tag
+        if: steps.check_release.outputs.exists == 'false' && env.VERSION != ''
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git tag -a ${{ env.VERSION }} -m "${{ env.VERSION }}"
+          git push origin --tags
 
       - name: Create release
         if: steps.check_release.outputs.exists == 'false' && env.VERSION != ''
