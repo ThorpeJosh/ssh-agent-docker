@@ -2,16 +2,9 @@
 name: Publish Image
 
 on:
-  release:
-    types: [published]
-  workflow_run:
-    workflows: ["Publish Github Release"]
-    types:
-      - completed
-    branches:
-      - main
-    conclusions:
-      - success
+  push:
+    tags:
+      - '*'
 
 env:
   IMAGE_NAME: ${{ github.repository }}
